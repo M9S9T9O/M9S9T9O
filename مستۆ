@@ -1,0 +1,8 @@
+pkg update && pkg upgrade
+pkg install git
+پاش ٸەوە ٸەوانەێ خوارێ
+mkdir myproject
+cd myproject
+فێربە لەمنەوە
+git config --global user.name "Nawet"
+git config --global user.email "email@example.com"
