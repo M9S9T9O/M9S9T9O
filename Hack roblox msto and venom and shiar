@@ -1,0 +1,74 @@
+pkg update && pkg upgrade -y
+pkg install python git -y
+pip install --upgrade pip
+pip install requests
+round 2
+xwarawa
+
+#!/usr/bin/env python3
+# tool.py - Termux Python scaffold for Roblox-related safe tasks
+import os
+import sys
+import json
+import requests
+
+DATA_DIR = "roblox_tools_data"
+
+def ensure_data_dir():
+    os.makedirs(DATA_DIR, exist_ok=True)
+
+def save_local(name, content):
+    ensure_data_dir()
+    path = os.path.join(DATA_DIR, name)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"Saved to {path}")
+
+def read_local(name):
+    path = os.path.join(DATA_DIR, name)
+    if not os.path.exists(path):
+        print("File not found:", path)
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()
+
+def fetch_url(url):
+    try:
+        r = requests.get(url, timeout=15)
+        r.raise_for_status()
+        return r.text
+    except Exception as e:
+        print("Request failed:", e)
+        return None
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python tool.py <command> [args]")
+        print("Commands: save <name> <text>, read <name>, fetch <url>")
+        return
+
+    cmd = sys.argv[1].lower()
+    if cmd == "save" and len(sys.argv) >= 4:
+        name = sys.argv[2]
+        text = " ".join(sys.argv[3:])
+        save_local(name, text)
+    elif cmd == "read" and len(sys.argv) >= 3:
+        name = sys.argv[2]
+        content = read_local(name)
+        if content is not None:
+            print("--- CONTENT ---")
+            print(content)
+    elif cmd == "fetch" and len(sys.argv) >= 3:
+        url = sys.argv[2]
+        data = fetch_url(url)
+        if data:
+            print(data[:1000])  # print first 1000 chars
+    else:
+        print("Unknown or incomplete command.")
+
+if __name__ == "__main__":
+    main()
+
+python tool.py save example.txt "this is a test" 
+python tool.py read example.txt
+python tool.py fetch https://example.com
